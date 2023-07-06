@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
-import bcrypt from 'bcryptjs';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
- const handleLogin = (e) => {
-  e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  const initialUsername = 'admin';
-  const initialPassword = 'admin';
-
-  if (username === initialUsername && password === initialPassword) {
-    onLogin();
-  } else {
-    alert('Invalid username or password');
-  }
-};
-
-  
+    try {
+      const response = await fetch(`/login/${username}/${password}`);
+      if (response.ok) {
+        onLogin();
+      } else {
+        throw new Error('Invalid username or password');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   return (
     <div className="login-modal">

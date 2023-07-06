@@ -31,13 +31,8 @@ const PasswordManager = ({ onLogout }) => {
   };
 
   const openChangeCredentialsModal = () => {
-    if (hasChangedCredentials) {
-      setShowChangeCredentialsModal(true);
-    } else {
-      alert('Please change your credentials first');
-    }
+    setShowChangeCredentialsModal(true);
   };
-  
 
   const closeChangeCredentialsModal = () => {
     setShowChangeCredentialsModal(false);
@@ -77,17 +72,17 @@ const PasswordManager = ({ onLogout }) => {
   const changeMasterCredentials = (e) => {
     e.preventDefault();
     if (newMasterUsername && newMasterPassword) {
-      // Update master credentials
+      const hashedPassword = bcrypt.hashSync(newMasterPassword, 10);
       localStorage.setItem('masterUsername', newMasterUsername);
-      localStorage.setItem('masterPassword', newMasterPassword);
-  
+      localStorage.setItem('masterPassword', hashedPassword);
+
       setHasChangedCredentials(true);
       closeChangeCredentialsModal();
     } else {
       alert('Please fill in all fields');
     }
   };
-  
+
   const updateWebsite = (e) => {
     e.preventDefault();
     if (editWebsite && editUsername && editPassword) {
@@ -113,6 +108,7 @@ const PasswordManager = ({ onLogout }) => {
 
   return (
     <div className="password-manager">
+      {hasChangedCredentials && <p>MasterCredentials have been changed successfully!</p>}
       <h1>Password Manager</h1>
       <button onClick={openChangeCredentialsModal}>Change Master Credentials</button>
       <button onClick={handleLogout}>Logout</button>
@@ -220,8 +216,7 @@ const PasswordManager = ({ onLogout }) => {
                 value={editWebsite}
                 onChange={(e) => setEditWebsite(e.target.value)}
               />
-              <input
-                type="text"
+              <input type="text"
                 placeholder="Username"
                 value={editUsername}
                 onChange={(e) => setEditUsername(e.target.value)}

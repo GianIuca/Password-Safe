@@ -69,7 +69,7 @@ public class Controller {
 
 
 
-    /*
+    
     @GetMapping("/login/{username}/{password}")
     public boolean login(@PathVariable String username, @PathVariable String password) {
         String usernameFile = "";
@@ -97,7 +97,7 @@ public class Controller {
     public void changeMaster() {
 
     }
-*/
+
     /*
     //generateKey();
     String content = "Name: Schucan\n" +
