@@ -13,11 +13,11 @@ const PasswordManager = ({ onLogout }) => {
   const [editWebsite, setEditWebsite] = useState('');
   const [editUsername, setEditUsername] = useState('');
   const [editPassword, setEditPassword] = useState('');
+  const [editingIndex, setEditingIndex] = useState(-1);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showChangeCredentialsModal, setShowChangeCredentialsModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [hasChangedCredentials, setHasChangedCredentials] = useState(false);
-
 
   const openAddModal = () => {
     setShowAddModal(true);
@@ -41,10 +41,12 @@ const PasswordManager = ({ onLogout }) => {
   };
 
   const openEditModal = (index) => {
+    const website = websites[index];
+    setEditWebsite(website.website);
+    setEditUsername(website.username);
+    setEditPassword(website.password);
+    setEditingIndex(index);
     setShowEditModal(true);
-    setEditWebsite(websites[index].website);
-    setEditUsername(websites[index].username);
-    setEditPassword(websites[index].password);
   };
 
   const closeEditModal = () => {
@@ -52,6 +54,7 @@ const PasswordManager = ({ onLogout }) => {
     setEditWebsite('');
     setEditUsername('');
     setEditPassword('');
+    setEditingIndex(-1);
   };
 
   const addWebsite = (e) => {
@@ -86,6 +89,17 @@ const PasswordManager = ({ onLogout }) => {
   const updateWebsite = (e) => {
     e.preventDefault();
     if (editWebsite && editUsername && editPassword) {
+      const updatedWebsites = websites.map((website, index) => {
+        if (index === editingIndex) {
+          return {
+            website: editWebsite,
+            username: editUsername,
+            password: editPassword,
+          };
+        }
+        return website;
+      });
+      setWebsites(updatedWebsites);
       closeEditModal();
     } else {
       alert('Please fill in all fields');
@@ -216,7 +230,8 @@ const PasswordManager = ({ onLogout }) => {
                 value={editWebsite}
                 onChange={(e) => setEditWebsite(e.target.value)}
               />
-              <input type="text"
+              <input
+                type="text"
                 placeholder="Username"
                 value={editUsername}
                 onChange={(e) => setEditUsername(e.target.value)}
